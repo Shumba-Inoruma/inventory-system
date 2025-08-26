@@ -24,11 +24,10 @@ Route::prefix('products')->group(function () {
 
 
 
-Route::prefix('stocks')->group(function () {
-    Route::post('/add', [StockController::class, 'addStock']);     // Stock in
-    Route::post('/remove', [StockController::class, 'removeStock']); // Stock out
+Route::prefix('stocks')->middleware('auth:sanctum')->group(function () {
+    Route::post('/add', [StockController::class, 'addStock']);     
+    Route::post('/remove', [StockController::class, 'removeStock']);
 });
-
 
 Route::prefix('users')->group(function () {
     Route::post('/register', [UsersController::class, 'register']);
