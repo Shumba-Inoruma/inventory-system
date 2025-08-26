@@ -12,17 +12,14 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-Route::prefix('products')->group(function () {
+Route::prefix('products')->middleware('auth:sanctum')->group(function () {
     Route::get('/', [ProductController::class, 'index']);       // List all products
     Route::get('{id}', [ProductController::class, 'show']);    // Show single product
     Route::post('/', [ProductController::class, 'store']);     // Create product
     Route::put('{id}', [ProductController::class, 'update']);  // Update product
     Route::delete('{id}', [ProductController::class, 'destroy']); // Delete product
     Route::get('{id}/stock-count', [ProductController::class, 'stockCount']);
-
 });
-
-
 
 Route::prefix('stocks')->middleware('auth:sanctum')->group(function () {
     Route::post('/add', [StockController::class, 'addStock']);     

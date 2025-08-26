@@ -55,7 +55,7 @@ class StockController extends Controller
 
         // Only admin (1) or storekeeper (2) can remove stock
         if (!in_array($user->role_id, [1, 2])) {
-            return response()->json(['message' => 'Forbidden'], 403);
+            return response()->json(['message' => 'Forbidden, User does not have enough rights'], 403);
         }
 
         $request->validate([
