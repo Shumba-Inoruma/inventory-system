@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Stock;
-use App\Models\Log; // MongoDB log model
+use App\Models\Log; 
 
 class StockController extends Controller
 {

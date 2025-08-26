@@ -33,4 +33,8 @@ Route::prefix('stocks')->group(function () {
 Route::prefix('users')->group(function () {
     Route::post('/register', [UsersController::class, 'register']);
     Route::post('/activate', [UsersController::class, 'activate']);
+    Route::post('/login', [UsersController::class, 'login']);
+    Route::post('/logout', [UsersController::class, 'logout'])->middleware('auth:sanctum'); // protected
 });
+
+
