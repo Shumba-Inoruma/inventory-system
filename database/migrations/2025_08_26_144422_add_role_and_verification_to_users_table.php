@@ -8,7 +8,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('viewer')->after('password');
             $table->string('verification_code')->nullable()->after('role');
             $table->boolean('is_verified')->default(false)->after('verification_code');
         });
@@ -21,4 +20,6 @@ return new class extends Migration
         });
     }
 };
+
+
 

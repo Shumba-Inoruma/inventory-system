@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\UsersController;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -25,4 +27,10 @@ Route::prefix('products')->group(function () {
 Route::prefix('stocks')->group(function () {
     Route::post('/add', [StockController::class, 'addStock']);     // Stock in
     Route::post('/remove', [StockController::class, 'removeStock']); // Stock out
+});
+
+
+Route::prefix('users')->group(function () {
+    Route::post('/register', [UsersController::class, 'register']);
+    Route::post('/activate', [UsersController::class, 'activate']);
 });
