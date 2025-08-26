@@ -11,8 +11,8 @@ use Illuminate\Support\Str;
 
 class UsersController extends Controller
 {
-    // Registration endpoint
-    public function register(Request $request)
+  // Registration endpoint
+public function register(Request $request)
     {
         $request->validate([
             'email' => 'required|email|unique:users',
@@ -24,7 +24,7 @@ class UsersController extends Controller
         $role = Role::firstOrCreate(['name' => 'viewer']);
 
         // Generate verification code
-        $verification_code = Str::random(6);
+        $verification_code = rand(100000, 999999); // 6-digit numeric code
 
         // Create user
         $user = User::create([
@@ -35,15 +35,29 @@ class UsersController extends Controller
             'verification_code' => $verification_code,
         ]);
 
-        // Send verification email
-        Mail::raw("Your activation code is: $verification_code", function($message) use ($user) {
-            $message->to($user->email)
-                    ->subject('Activate Your Account');
-        });
+        $emailBody = "Welcome to our platform, {$user->name}!\n\n";
+        $emailBody .= "Your activation code is: {$verification_code}\n";
+        $emailBody .= "Please use this code to verify your account.\n\n";
+        $emailBody .= "Thank you!";
 
-        return response()->json([
-            'message' => 'User registered. Check your email for activation code.'
-        ]);
+        // $result = sendEmail($user->email, 'Account Activation', $emailBody);
+        $result = sendEmail('chirovemunyaradzi@gmail.com', 'Account Activation', $emailBody);
+
+
+        if ($result === true) {
+            return response()->json([
+                'message' => 'User registered successfully. Check your email for the activation code.',
+                'user' => [
+                    'name' => $user->name,
+                    'email' => $user->email
+                ]
+            ], 201);
+        } else {
+            return response()->json([
+                'message' => 'User registered, but failed to send email.',
+                'error' => $result
+            ], 500);
+        }
     }
 
     // Activation endpoint

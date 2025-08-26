@@ -26,7 +26,11 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+        "app/Helpers/helpers.php"
+    ]
+
     },
     "autoload-dev": {
         "psr-4": {
@@ -63,6 +67,7 @@
             "dont-discover": []
         }
     },
+    
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
@@ -72,6 +77,10 @@
             "php-http/discovery": true
         }
     },
+    
     "minimum-stability": "stable",
     "prefer-stable": true
+
+   
+
 }
