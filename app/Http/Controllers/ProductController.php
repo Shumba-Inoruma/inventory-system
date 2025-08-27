@@ -6,27 +6,44 @@ use Illuminate\Http\Request;
 use App\Models\Product;  // PostgreSQL product model
 use App\Models\Log;      // MongoDB log model
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
     
-    public function index()
-    {
+  public function index()
+{
+    $fromCache = true;
+
+    try {
+     $products = Cache::store('redis')->remember('products_all', 60, function () use (&$fromCache) {
+        $fromCache = false;
+        return Product::all();
+    });
+
+    } catch (\Exception $e) {
+        // Redis not reachable, fallback to DB
+        $fromCache = false;
         $products = Product::all();
-        Log::create([
-        'action' => 'create_product',
-        'details' => "viewed all products",
-        'type' => 'product',
-        'metadata' => "no meta"
-        ]);
-  
-        return response()->json([
-            'success' => true,
-            'data' => $products
-        ]);
+        $redisError = $e->getMessage();
     }
 
-    /**
+    // Log the action
+    Log::create([
+        'action' => 'view_products',
+        'details' => "Viewed all products",
+        'type' => 'product',
+        'metadata' => "no meta"
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'data' => $products,
+        'source' => $fromCache ? 'cache' : 'database',
+        'redis_error' => $redisError ?? null
+    ]);
+}
+ /**
      * Store a new product
      */
 public function store(Request $request)
